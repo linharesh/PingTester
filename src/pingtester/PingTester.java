@@ -8,21 +8,17 @@ package pingtester;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author HenriqueLinhares
  */
-public class PingTester {
+public class PingTester extends TimerTask {
 
-//    public static void main(String args[]) throws Exception {
-//        
-//        System.out.println(completeHostlistTest().toString());
-//        TimeUnit.SECONDS.sleep(5);
-//        System.out.println(completeHostlistTest().toString());
-//        
-//    }
     private boolean testWillContinue;
 
     public boolean getTestWillContinue() {
@@ -35,16 +31,18 @@ public class PingTester {
 
     public void startTest() throws IOException, InterruptedException {
         setTestWillContinue(true);
+        Timer timer = new Timer();
+        
+        timer.scheduleAtFixedRate(this, 0, 1000);
+    }
 
-        while (getTestWillContinue()) {
+    @Override
+    public void run() {
+        try {
             System.out.println(completeHostlistTest().toString());
-            try {
-                Thread.sleep(1000);                 //1000 milliseconds is one second.
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
+        } catch (IOException ex) {
+            Logger.getLogger(PingTester.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     public void finishTest() {
