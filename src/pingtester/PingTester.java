@@ -21,9 +21,16 @@ public class PingTester extends TimerTask {
 
     private boolean isRunning;
     private Timer timer;
+    private int numOfTests;
+    
 
+    public int getNumberOftests(){
+    return numOfTests;
+    }
+    
     public PingTester(){
         OutputFileWriter.openFile();
+        numOfTests = 0;
     }
 
     public boolean getIsRunning() {
@@ -38,7 +45,7 @@ public class PingTester extends TimerTask {
         if (isRunning == false) {
             isRunning = true;
             timer = new Timer();
-            timer.scheduleAtFixedRate(this, 1000, 900000); //900000 - 15 min
+            timer.scheduleAtFixedRate(this, 1000, 300000); //900000 - 15 min        // 300000 - 5 min
         }
 
     }
@@ -46,6 +53,8 @@ public class PingTester extends TimerTask {
     @Override
     public void run() {
         System.out.println("começou a rodar");
+        numOfTests++;
+        
         try {
             String S = completeHostlistTest().toString();
             System.out.println(S);
