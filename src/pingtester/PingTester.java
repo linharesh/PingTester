@@ -19,34 +19,47 @@ import java.util.logging.Logger;
  */
 public class PingTester extends TimerTask {
 
-    private boolean testWillContinue;
+    private boolean isRunning;
+    private Timer timer;
 
-    public boolean getTestWillContinue() {
-        return testWillContinue;
+    public PingTester(){
+        OutputFileWriter.openFile();
     }
 
-    public void setTestWillContinue(boolean testWillContinue) {
-        this.testWillContinue = testWillContinue;
+    public boolean getIsRunning() {
+        return isRunning;
+    }
+
+    public void setIsRunning(boolean testWillContinue) {
+        this.isRunning = testWillContinue;
     }
 
     public void startTest() throws IOException, InterruptedException {
-        setTestWillContinue(true);
-        Timer timer = new Timer();
-        
-        timer.scheduleAtFixedRate(this, 0, 1000);
+        if (isRunning == false) {
+            isRunning = true;
+            timer = new Timer();
+            timer.scheduleAtFixedRate(this, 1000, 900000); //900000 - 15 min
+        }
+
     }
 
     @Override
     public void run() {
+        System.out.println("começou a rodar");
         try {
-            System.out.println(completeHostlistTest().toString());
+            String S = completeHostlistTest().toString();
+            System.out.println(S);
+            OutputFileWriter.writeInOutputFile(S);
         } catch (IOException ex) {
             Logger.getLogger(PingTester.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void finishTest() {
-        setTestWillContinue(false);
+        this.isRunning = false;
+        timer.cancel();
+        OutputFileWriter.closeFile();
+        System.exit(0);
     }
 
     public static TestResult completeHostlistTest() throws IOException {
@@ -67,7 +80,7 @@ public class PingTester extends TimerTask {
                 returningTestResult.incrementFailRate();
             }
 
-            // System.out.println(URL + "\t\tStatus:" + status);
+             System.out.println(URL + "\t\tStatus:" + status);
         }
 
         return returningTestResult;
