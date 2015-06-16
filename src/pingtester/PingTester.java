@@ -16,12 +16,39 @@ import java.util.concurrent.TimeUnit;
  */
 public class PingTester {
 
-    public static void main(String args[]) throws Exception {
-        
-        System.out.println(completeHostlistTest().toString());
-        TimeUnit.SECONDS.sleep(5);
-        System.out.println(completeHostlistTest().toString());
-        
+//    public static void main(String args[]) throws Exception {
+//        
+//        System.out.println(completeHostlistTest().toString());
+//        TimeUnit.SECONDS.sleep(5);
+//        System.out.println(completeHostlistTest().toString());
+//        
+//    }
+    private boolean testWillContinue;
+
+    public boolean getTestWillContinue() {
+        return testWillContinue;
+    }
+
+    public void setTestWillContinue(boolean testWillContinue) {
+        this.testWillContinue = testWillContinue;
+    }
+
+    public void startTest() throws IOException, InterruptedException {
+        setTestWillContinue(true);
+
+        while (getTestWillContinue()) {
+            System.out.println(completeHostlistTest().toString());
+            try {
+                Thread.sleep(1000);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+    }
+
+    public void finishTest() {
+        setTestWillContinue(false);
     }
 
     public static TestResult completeHostlistTest() throws IOException {
@@ -42,9 +69,9 @@ public class PingTester {
                 returningTestResult.incrementFailRate();
             }
 
-          // System.out.println(URL + "\t\tStatus:" + status);
+            // System.out.println(URL + "\t\tStatus:" + status);
         }
-       
+
         return returningTestResult;
     }
 
