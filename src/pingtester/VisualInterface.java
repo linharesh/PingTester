@@ -95,6 +95,8 @@ public class VisualInterface extends javax.swing.JFrame {
         } catch (InterruptedException ex) {
             Logger.getLogger(VisualInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
+        
         jLabel1.setText("Test Running"); 
     }//GEN-LAST:event_jButton1ActionPerformed
 

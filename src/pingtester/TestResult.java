@@ -17,6 +17,7 @@ public class TestResult {
     private int failRate;
     private int totalOfTests;
 
+    @Override
     public String toString(){
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");

@@ -10,8 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +27,6 @@ public class PingTester extends TimerTask {
     }
     
     public PingTester(){
-        OutputFileWriter.openFile();
         numOfTests = 0;
     }
 
@@ -45,7 +42,7 @@ public class PingTester extends TimerTask {
         if (isRunning == false) {
             isRunning = true;
             timer = new Timer();
-            timer.scheduleAtFixedRate(this, 1000, 300000); //900000 - 15 min        // 300000 - 5 min
+            timer.scheduleAtFixedRate(this, 1000, 180000); //900000 - 15 min        // 300000 - 5 min
         }
 
     }
@@ -58,16 +55,15 @@ public class PingTester extends TimerTask {
         try {
             String S = completeHostlistTest().toString();
             System.out.println(S);
-            OutputFileWriter.writeInOutputFile(S);
+            OutputFileWriter.writeInLog(S);
         } catch (IOException ex) {
-            Logger.getLogger(PingTester.class.getName()).log(Level.SEVERE, null, ex);
+            OutputFileWriter.writeInLog(" # Ocorreu uma exception ao executar este teste! # ");
         }
     }
 
     public void finishTest() {
         this.isRunning = false;
         timer.cancel();
-        OutputFileWriter.closeFile();
         System.exit(0);
     }
 
@@ -109,6 +105,7 @@ public class PingTester extends TimerTask {
                 return true;
             }
         } catch (Exception e) {
+            OutputFileWriter.writeInLog(" # Ocorreu uma exception ao executar este teste! # ");
             return false;
         }
         return false;
